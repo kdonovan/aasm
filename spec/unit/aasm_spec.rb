@@ -413,3 +413,29 @@ describe ChetanPatil do
     cp.dress!(:dating, 'purple', 'slacks')
   end
 end
+
+
+class KaliDonovan
+  include AASM
+  aasm_initial_state :clean
+  aasm_state :clean
+  aasm_state :dirty
+
+  aasm_event :mark_dirty do
+    transitions :from => :clean, :to => :dirty, :on_transition => :flag_owner
+  end
+
+  def flag_owner(flag_category, flag_message)
+  end
+end
+
+describe KaliDonovan do
+  it 'should not have to specify target transition state when calling on_transition method with args with only one possible :to state' do
+    kd = KaliDonovan.new
+    kd.aasm_current_state.should == :clean
+    
+    kd.should_receive(:flag_owner).with('Spam', 'This message is spammy')
+    kd.mark_dirty!('Spam', 'This message is spammy')
+    kd.aasm_current_state.should == :dirty
+  end
+end

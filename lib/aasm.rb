@@ -125,9 +125,18 @@ module AASM
     obj
   end
 
+  # If only one possible transition state, don't require it to be explicitly passed in as an argument
+  def aasm_set_default_transition_args(name, args)
+    possible_states = self.class.aasm_events[name].transitions_from_state(aasm_current_state).map{|t| t.to}.flatten
+    if possible_states.size == 1 && args.first && args.first.to_sym != possible_states.first.to_sym
+      args = args.unshift(possible_states.first.to_sym)
+    end
+  end
+
   def aasm_fire_event(name, persist, *args)
     aasm_state_object_for_state(aasm_current_state).call_action(:exit, self)
-
+    aasm_set_default_transition_args(name, args)
+    
     new_state = self.class.aasm_events[name].fire(self, *args)
     
     unless new_state.nil?

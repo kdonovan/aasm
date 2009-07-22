@@ -31,6 +31,10 @@ module AASM
       def transitions_from_state?(state)
         @transitions.any? { |t| t.from == state }
       end
+
+      def transitions_from_state(state)
+        @transitions.select { |t| t.from == state }
+      end
       
       def execute_success_callback(obj)
         case success

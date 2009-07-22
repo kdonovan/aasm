@@ -1,6 +1,8 @@
+* Allowed passing args to on_transition methods without explicitly specifying :to state when only one is possible [Kali Donovan]
+
 * In AR persistence, move state column from class level variables into the StateMachine object for the class
 
-* allowed :to array and :on_transition callback [Kevin Triplett]
+* Allowed :to array and :on_transition callback [Kevin Triplett]
 
 * Support enter and exit actions on states
 
